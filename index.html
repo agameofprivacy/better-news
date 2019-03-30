@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Better News</title>
+	<meta name="description" content="The HTML5 Herald">
+	<meta name="author" content="SitePoint">
+
+	<link rel="stylesheet" href="css/index.css">
+	<script src="https://unpkg.com/youtube-api-v3-search@1.2.1/dist/youtube-api-v3-search.min.js"></script>
+</head>
+
+<body>
+	<script src="https://www.youtube.com/iframe_api"></script>
+	<div class="module module-home-video">
+		<div id="video"></div>
+	</div>	
+	<div id="controls">
+		<ol>
+			<li>8:30 公視英語新聞 (重播~15分)</li>
+			<li>9:00 公視夜間新聞 (重播~50分)</li>
+			<li>10:00 公視新聞全球話 (重播~50分)</li>
+			<li>11:00 公視夜間新聞 (重播~50分)</li>
+			<li>12:00 公視中晝新聞 (直播)</li>
+			<li>13:30 公視手語新聞 (重播~30分)</li>
+			<li>14:30 公視早安新聞 (重播~50分)</li>
+			<li>15:30 公視新聞全球話 (重播~50分)</li>
+			<li>16:30 公視手語新聞 (重播~30分)</li>
+			<li>節目間隔隨機以公視公民新聞報或宣導影片插播</li>
+		</ol>
+		<div class="column">
+			<h4>輸入串場宣導影片YouTube網址 (以行分隔)</h4>
+			<textarea id="fillers">
+https://www.youtube.com/watch?v=zwMQ5Vu5fJ4
+https://www.youtube.com/watch?v=dU7oxzp0lc8
+https://www.youtube.com/watch?v=R3gUYZ7W9uE
+https://www.youtube.com/watch?v=fub6RgWEZZs
+https://www.youtube.com/watch?v=0ftF54WJPzY
+https://www.youtube.com/watch?v=k36jUQ9Lw6s
+https://www.youtube.com/watch?v=ZDEjMhh2ZCs
+https://www.youtube.com/watch?v=GevFH3-m8pQ</textarea>
+			<button id="start" disabled>開始播放</button>
+		</div>
+	</div>
+	<script src="js/moment.js"></script>	
+	<script src="js/auth.js"></script>
+	<script src="js/index.js"></script>
+</body>
+</html>
