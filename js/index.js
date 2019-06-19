@@ -1,8 +1,8 @@
 // var API_KEY = "AIzaSyCZ1leePMtcQO7GWpgofpZcKS1rCynPCvI";
-// var API_KEY = "AIzaSyBG4TGtuyIfa7MEMh2JeX583pP26NMLqpc";
+var API_KEY = "AIzaSyBG4TGtuyIfa7MEMh2JeX583pP26NMLqpc";
 // var API_KEY = "AIzaSyBoxuSlj6bfGhDnCwGbOV1-PXQxh4FlzNU";
 // var API_KEY = "AIzaSyDn5ovGUrZm4miWyghad1hCpOuRSk-HDd0";
-var API_KEY = "AIzaSyA-byAWIHH8deGmogQMY2XWMr49ahvldfk";
+// var API_KEY = "AIzaSyA-byAWIHH8deGmogQMY2XWMr49ahvldfk";
 
 var player, playing = false;
 
@@ -13,6 +13,7 @@ var fillerVideoIds = [];
 var liveChannelId = "_isseGKrquc";
 var isMorning = moment().get('hour') <= 12;
 var joinedFillerIds = [];
+var loadingLongForm = false;
 
 // isMorning = true;
 
@@ -23,38 +24,56 @@ var fillerPlaybackIndex = 0;
 var timer = setInterval(() => {
     if (player){
         loadScheduled();
-        player.playVideo();
+        if (afternoonLongForms.length === 0 && moment().get('hour') > 13 && moment().get('minute') > 20) {
+            loadEveningNews();
+        }
+        // player.playVideo();
     }
 }, 1000)
 
 function loadScheduled() {
-    switch(moment().format('hh:mm:ss')) {
+    switch(moment().format('HH:mm:ss')) {
         case "08:30:00":
-            player.loadVideoById(morningLongForms[0]);
+            loadingLongForm = true;
+            player.loadVideoById(morningLongForms[0].id.videoId);
             break;
         case "09:00:00":
-            player.loadVideoById(morningLongForms[1]);
+            loadingLongForm = true;
+            player.loadVideoById(morningLongForms[1].id.videoId);
+            break;
+        case "10:15:00":
+            if (moment().get('date') === 1 && moment().get('month') === 3) {
+                loadingLongForm = true;
+                player.loadVideoById(morningLongForms[1].id.videoId);
+            }
             break;
         case "10:00:00":
-            player.loadVideoById(morningLongForms[2]);
+            loadingLongForm = true;
+            player.loadVideoById(morningLongForms[2].id.videoId);
             break;
         case "11:00:00":
-            player.loadVideoById(morningLongForms[1]);
+            loadingLongForm = true;
+            player.loadVideoById(morningLongForms[1].id.videoId);
             break;
         case "12:00:00":
+            loadingLongForm = true;
             player.loadVideoById(liveChannelId);
             break;
         case "13:30:00":
-            player.loadVideoById(afternoonLongForms[0]);
+            loadingLongForm = true;
+            player.loadVideoById(afternoonLongForms[0].id.videoId);
             break;
         case "14:30:00":
-            player.loadVideoById(afternoonLongForms[1]);
+            loadingLongForm = true;
+            player.loadVideoById(afternoonLongForms[1].id.videoId);
             break;
         case "15:30:00":
-            player.loadVideoById(afternoonLongForms[2]);
+            loadingLongForm = true;
+            player.loadVideoById(afternoonLongForms[2].id.videoId);
             break;
         case "16:30:00":
-            player.loadVideoById(afternoonLongForms[0]);
+            loadingLongForm = true;
+            player.loadVideoById(afternoonLongForms[0].id.videoId);
             break;
         default:
             break;
@@ -66,21 +85,25 @@ function onPlayerStateChange(event) {
         case YT.PlayerState.PLAYING:
             console.log('video started');
             playing = true;
-            var playerElement = document.querySelector("#video");
-            var requestFullScreen = playerElement.requestFullScreen || playerElement.mozRequestFullScreen || playerElement.webkitRequestFullScreen;
-            if (requestFullScreen) {
-                requestFullScreen.bind(playerElement)();
-            }                
+            if (loadingLongForm) {
+                console.log("loadingLongForm is true", loadingLongForm);
+                loadingLongForm = false;
+                console.log("loadingLongForm is false", loadingLongForm);
+            }
+            // var playerElement = document.querySelector("#video");
+            // var requestFullScreen = playerElement.requestFullScreen || playerElement.mozRequestFullScreen || playerElement.webkitRequestFullScreen;
+            // if (requestFullScreen) {
+            //     requestFullScreen.bind(playerElement)();
+            // }
             break;
         case YT.PlayerState.PAUSED:
             console.log('video paused');
             playing = false;
         case YT.PlayerState.ENDED:
             console.log('video ended');
-            if (player.getCurrentTime() === player.getDuration()) {
+            if (!loadingLongForm && player.getCurrentTime() === player.getDuration()) {
                 loadFiller();
             }
-            player.playVideo()
             playing = true;
         default:
             break; 
@@ -153,7 +176,7 @@ function onYouTubeIframeAPIReady() {
 
     const englishNewsOptions = {
         part: 'id',
-        q: 'PTS English News',
+        q: '*********PTS English News',
         type: 'video',
         maxResults: 1,
         order: 'date',
@@ -162,7 +185,7 @@ function onYouTubeIframeAPIReady() {
 
     const nightlyNewsOptions = {
         part:'id',
-        q: '晚間新聞',
+        q: '*********晚間新聞+********晚間新聞',
         type: 'video',
         maxResults: 1,
         order: 'date',
@@ -172,7 +195,7 @@ function onYouTubeIframeAPIReady() {
 
     const worldNewsOptions = {
         part: 'id',
-        q: '新聞全球話',
+        q: '*********新聞全球話+********新聞全球話',
         type: 'video',
         maxResults: 1,
         order: 'date',
@@ -182,7 +205,7 @@ function onYouTubeIframeAPIReady() {
 
     const morningNewsOptions = {
         part: 'id',
-        q: '早安新聞',
+        q: '*********早安新聞+********早安新聞',
         type: 'video',
         maxResults: 1,
         order: 'date',
@@ -192,7 +215,7 @@ function onYouTubeIframeAPIReady() {
 
     const signLangNewsOptions = {
         part: 'id',
-        q: '手語新聞',
+        q: '*********手語新聞+********手語新聞',
         type: 'video',
         maxResults: 1,
         order: 'date',
@@ -260,4 +283,22 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+}
+
+function loadEveningNews(){
+    let fetchSignLangNews = searchYoutube(API_KEY, signLangNewsOptions);
+    let fetchMorningNews = searchYoutube(API_KEY, morningNewsOptions);
+    let fetchWorldNews = searchYoutube(API_KEY, worldNewsOptions);
+
+    fetchSignLangNews.then((sign_result) => {            
+        afternoonLongForms.push(sign_result.items[0]);
+        
+        fetchMorningNews.then((morning_result) => {
+            afternoonLongForms.push(morning_result.items[0]);
+
+            fetchWorldNews.then((world_result) => {
+                afternoonLongForms.push(world_result.items[0]);
+            })
+        })
+    })
 }
